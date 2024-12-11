@@ -1,6 +1,8 @@
 
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror -g -O -fPIE -fsanitize=address
+# CFLAGS		=	-Wall -Wextra -Werror -g -O3 -fPIE -fsanitize=address
+
+CFLAGS		=	-g -fPIE -fsanitize=address
 RM 			= 	rm -f
 NAME		=	ft_ssl
 SRC			=	$(wildcard srcs/*.c) 

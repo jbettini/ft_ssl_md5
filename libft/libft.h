@@ -164,6 +164,8 @@ void    		startTimer(void);
 void    		stopTimer(void);
 t_color 		*getRandomColor(void);
 void    		setRandomizer();
+void			ft_putstrs(char const **s);
+void			ft_putendl_void(void *s);
 
 
 

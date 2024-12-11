@@ -20,3 +20,12 @@ void	ft_putstr(char const *s)
 	while (s[i])
 		write(1, &s[i++], 1);
 }
+
+void	ft_putstrs(char const **s)
+{
+	size_t	i;
+
+	i = -1;
+	while (s[++i])
+		ft_putstr(s[i]);
+}
