@@ -25,6 +25,17 @@ void    help_on_error(char *bad_cmd) {
     exit(1);
 }
 
+void    handle_flags(t_cmd *cmd, char *flag) {
+    if (ft_strequ(flag, "-p") && !cmd->p)
+        cmd->p = true;
+    else if (ft_strequ(flag, "-q") && !cmd->q)
+        cmd->q = true;
+    else if (ft_strequ(flag, "-r") && !cmd->r)
+        cmd->r = true;
+    else 
+        cmd_exit_on_multiple_option(cmd, flag);
+}
+
 t_cmd   *cmd_parse(char **args) {
     int i = 0;
     t_cmd   *ret =  cmd_get();
@@ -33,13 +44,9 @@ t_cmd   *cmd_parse(char **args) {
     else
         help_on_error(args[0]);
     while (args[++i]) {
-        if (ft_strequ(args[i], "-p")) {
-            ret->p = ret->p ? cmd_exit_on_multiple_option(ret, "-p") : true;
-        } else if (ft_strequ(args[i], "-q")) {
-            ret->q = ret->q ? cmd_exit_on_multiple_option(ret, "-q") : true;
-        } else if (ft_strequ(args[i], "-r")) {
-            ret->r = ret->r ? cmd_exit_on_multiple_option(ret, "-r") : true;
-        } else if (ft_strequ(args[i], "-s")) {
+        if (ft_strequ(args[i], "-p") ||  ft_strequ(args[i], "-q") || ft_strequ(args[i], "-r"))
+            handle_flags(ret, args[i]);
+        else if (ft_strequ(args[i], "-s")) {
             if (!args[++i]) {
                 fprintf(stderr, "ft_ssl: Error: -s flags Cannot take a Null String.\n");
                 cmd_free(ret);
@@ -53,7 +60,7 @@ t_cmd   *cmd_parse(char **args) {
         while(args[i])
             ft_lstadd_back(&ret->files, ft_lstnew(ft_strdup(args[i++])));
     }
-    // cmd_print(ret);
+    cmd_print(ret);
     return ret;
 }
 
