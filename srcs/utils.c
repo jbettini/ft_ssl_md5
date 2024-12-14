@@ -9,8 +9,14 @@ char    *read_data(int fd) {
         fprintf(stderr, "Error: Invalid file descriptor\n");
         exit(1);
     }
-    while (read(fd, buffer, PAGE_SIZE)) {
-        buffer[PAGE_SIZE - 1] = 0;
+    int bytes_read = 0;
+    while ((bytes_read = read(fd, buffer, PAGE_SIZE))) {
+        if (bytes_read < 0){
+            fprintf(stderr, "Error: Read Faillure\n");
+            free(ret);
+            exit(1);
+        }
+        buffer[bytes_read] = 0;
         ret = ft_strjoin_gnl(ret, buffer);
     }
     return ret;
