@@ -18,5 +18,8 @@ void    help();
 void    cmd_free(t_cmd *args);
 void    ft_putbool(bool b);
 void    cmd_print(t_cmd *args);
+void    execute_cmd(t_cmd *cmd);
+char    *sha256(char *data_to_hash);
+char    *md5(char *data_to_hash);
 
 #endif

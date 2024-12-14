@@ -1,4 +1,20 @@
 #include "ssl.h"
+#define PAGE_SIZE 4096
+
+char    *read_data(int fd) {
+    char    *ret = NULL;
+    char    buffer[PAGE_SIZE];
+
+    if (fd < 0) {
+        fprintf(stderr, "Error: Invalid file descriptor\n");
+        exit(1);
+    }
+    while (read(fd, buffer, PAGE_SIZE)) {
+        buffer[PAGE_SIZE - 1] = 0;
+        ret = ft_strjoin_gnl(ret, buffer);
+    }
+    return ret;
+}
 
 void help() {
     ft_putendl("Commands:\nmd5\nsha256\n");
@@ -12,6 +28,7 @@ void    free_safe(void *ptr) {
     }
     free(ptr);
 }
+
 void    ft_putbool(bool b) {
     b ? ft_putendl("true"): ft_putendl("false");
 }

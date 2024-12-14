@@ -39,6 +39,7 @@ void    handle_flags(t_cmd *cmd, char *flag) {
 t_cmd   *cmd_parse(char **args) {
     int i = 0;
     t_cmd   *ret =  cmd_get();
+    // TODO add SHA256
     if (ft_strequ(args[0], "md5"))
         ret->cmd = ft_strdup(args[0]);
     else
@@ -56,11 +57,9 @@ t_cmd   *cmd_parse(char **args) {
         } else
             break ;
     }
-    if (args[i]) {
-        while(args[i])
-            ft_lstadd_back(&ret->files, ft_lstnew(ft_strdup(args[i++])));
-    }
-    cmd_print(ret);
+    while(args[i])
+        ft_lstadd_back(&ret->files, ft_lstnew(ft_strdup(args[i++])));
+    // cmd_print(ret);
     return ret;
 }
 
@@ -74,4 +73,21 @@ void    cmd_free(t_cmd *args) {
     if (args->s) {
         free_safe(args);
     }
+}
+
+void    execute_cmd(t_cmd *cmd) {
+    char *(*hash_fun)(char *);
+    if (ft_strequ(cmd->cmd, "md5"))
+        hash_fun = &md5;
+    else if (ft_strequ(cmd->cmd, "sha256"))
+        hash_fun = &sha256;
+    t_list *files = cmd->files;
+    t_list *strs = cmd->s;
+    // TODO handle -p
+    while (strs) {
+        char *hash = hash_fun(strs->content);
+        strs = strs->next;
+        // printf("Exit here\n");
+        exit(1);
+    };
 }
