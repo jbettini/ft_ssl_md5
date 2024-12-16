@@ -8,7 +8,6 @@ NAME		=	ft_ssl
 SRC			=	$(wildcard srcs/*.c) 
 LIBFT_DIR	=	libft
 LIBFT		=	$(LIBFT_DIR)/libft.a
-VISU		=	Visualizer
 
 TXT_RED = "\033[1;31m"
 TXT_GREEN = "\033[1;32m"

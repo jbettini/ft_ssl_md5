@@ -12,7 +12,6 @@
 
 #include "libft.h"
 
-
 void    leaksManager(int mode, void *ptr){
     static  t_list *allPtr;
     if (mode == ADD) {

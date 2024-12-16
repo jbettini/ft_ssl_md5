@@ -2,6 +2,13 @@
 # define SSL_H
 #include "../libft/libft.h"
 
+#define AND &
+#define OR |
+#define XOR ^
+#define NOT ~
+#define LSHIFT <<
+#define RSHIFT >>
+
 typedef struct s_cmd
 {
     char    *cmd;
