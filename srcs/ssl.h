@@ -28,5 +28,6 @@ void    cmd_print(t_cmd *args);
 void    execute_cmd(t_cmd *cmd);
 char    *sha256(char *data_to_hash);
 char    *md5(char *data_to_hash);
+void    putbytes(__uint8_t octet);
 
 #endif
