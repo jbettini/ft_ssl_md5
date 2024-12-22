@@ -37,35 +37,41 @@ char    **md5_get_blocks(char *data_to_hash, uint64_t data_len) {
     int     blocks_size = (data_len + 8) / 64 + 1;
     char    **blocks_tab = ft_calloc(sizeof(char *), (blocks_size + 1));
     
-    printf("block : %d | data_len : %lu | casted : %lu | mod %lu \n\n", blocks_size, data_len, data_len * 8, (data_len * 8 )% 512);
+    // printf("block : %d | data_len : %lu | casted : %lu | mod %lu \n\n", blocks_size, data_len, data_len * 8, (data_len * 8 )% 512);
 
     for (int i = 0; i < blocks_size; i++) {
         blocks_tab[i] = ft_calloc(sizeof(char), 64 + 1);
         int offset = i * 64;
         int rest = data_len - offset;
-        if (offset <= data_len)
-            ft_memcpy(blocks_tab[i], &data_to_hash[offset], (rest > 64 ? 64 : rest));
-        if (rest < 56) {
+        if (rest >= 64)
+            ft_memcpy(blocks_tab[i], &data_to_hash[offset], 64);
+        else {
+            ft_memcpy(blocks_tab[i], &data_to_hash[offset], rest);
             blocks_tab[i][rest] = 0x80;
+            for (int j = (i + 1); j < blocks_size; j++)
+                blocks_tab[j] = ft_calloc(sizeof(char), 64 + 1);
+            for (int i = 7; i >= 0; i--)
+                blocks_tab[blocks_size - 1][64 - i] = ((data_len * 8) >> (8 * i)) & 0xFF;
+            break ;
         }
     }
-    exit(0);
-    for (int i = 7; i >= 0; i--)
-        blocks_tab[blocks_size - 1][64 - i] = ((data_len * 8) >> (8 * i)) & 0xFF;
-    for (int i = 7; i >= 0; i--)
-        putbytes(blocks_tab[blocks_size - 1][64 - i]);
     return blocks_tab;
 }
+
+// for (int i = 7; i >= 0; i--)
+//     putbytes(blocks_tab[blocks_size - 1][64 - i]);
 
 uint32_t leftrotate(uint32_t x, int s) {
     return (x << s) | (x >> (32 - s));
 }
 
+
+void print_md5(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    printf("MD5 : %08x%08x%08x%08x\n", a, b, c, d);
+}
+
 char    *md5(char *data_to_hash) {
     char **blocks = md5_get_blocks(data_to_hash, ft_strlen(data_to_hash));
-    ft_putendl("-------------");
-    ft_putsendl((char **)blocks);
-    ft_putendl("-------------");
     for (int block_idx = 0; blocks[block_idx]; block_idx++) {
         uint32_t A = a0;
         uint32_t B = b0;
@@ -74,7 +80,7 @@ char    *md5(char *data_to_hash) {
         
         uint32_t M[16];
         for (int i = 0; i < 16; i++) {
-            M[i] = *(uint32_t *)(blocks[block_idx] + i * 4);
+            M[i] = *(uint32_t *)(blocks[block_idx] + (i * 4));
         }
         for (int i = 0; i < 64; i++) {
             int F, g;
@@ -106,7 +112,7 @@ char    *md5(char *data_to_hash) {
         d0 += D;
     }
 
-    printf("md5 : %x%x%x%x\n", a0, b0, c0, d0);
+    print_md5(a0, b0, c0, d0);
     // ft_putsendl(blocks);
     exit(1);
 }
