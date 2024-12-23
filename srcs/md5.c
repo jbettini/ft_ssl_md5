@@ -27,7 +27,6 @@ const uint32_t s[64] = {
     6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21
 };
 
-// TODO add len before
 char    **md5_get_blocks(char *data_to_hash, uint64_t data_len) {
     int     blocks_size = (data_len + 8) / 64 + 1;
     char    **blocks_tab = ft_calloc(sizeof(char *), (blocks_size + 1));

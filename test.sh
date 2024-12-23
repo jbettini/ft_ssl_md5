@@ -1,4 +1,9 @@
-./ft_ssl md5 -s "7E9BF5wUx9MBrgQeTO1NTiTs0TEByswNBZfbNUfcb9qCeG8xsTHAINdE4yFcExjYwtXCl68fZAyxEvVVx9LjAOtqtDRG0bbSnVyDLkq12oUtjVBkvYm3XiVUdLeJDH3TeljX1NkaomLWL3d9RH98iwHBNPRiUO9a7p6dYApldbq4o2efdSn4W"
-echo -n "ssl : "; echo "7E9BF5wUx9MBrgQeTO1NTiTs0TEByswNBZfbNUfcb9qCeG8xsTHAINdE4yFcExjYwtXCl68fZAyxEvVVx9LjAOtqtDRG0bbSnVyDLkq12oUtjVBkvYm3XiVUdLeJDH3TeljX1NkaomLWL3d9RH98iwHBNPRiUO9a7p6dYApldbq4o2efdSn4W" | md5sum
-# ./ft_ssl md5 -s "a"
-# echo -n "md5 : "; echo "a" | md5sum
+#!/bin/bash
+
+size=$((10 * 1024))
+
+random_string=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $size | head -n 1)
+
+./ft_ssl md5 -q -s "$random_string"
+
+echo -n "$random_string" | md5sum
