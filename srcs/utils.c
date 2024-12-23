@@ -39,12 +39,16 @@ void    ft_putbool(bool b) {
     b ? ft_putendl("true"): ft_putendl("false");
 }
 
-void putbytes(__uint8_t octet) {
-    for (int i = 7; i >= 0; i--) {
-        printf("%d", (octet >> i) & 1);
+void putbytes(uint8_t *octet, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 7; j >= 0; j--) {
+            printf("%d", (octet[i] >> j) & 1);
+        }
+        printf(" ");
     }
     printf("\n");
 }
+
 
 void    cmd_print(t_cmd *args) {
     ft_putstr("---------------\n");

@@ -1,5 +1,10 @@
 #include "ssl.h"
 
+enum type {
+    STDIN,
+    STRING
+};
+
 t_cmd *cmd_get() {
     t_cmd *p = malloc(sizeof(t_cmd));
 
@@ -59,7 +64,6 @@ t_cmd   *cmd_parse(char **args) {
     }
     while(args[i])
         ft_lstadd_back(&ret->files, ft_lstnew(ft_strdup(args[i++])));
-    // cmd_print(ret);
     return ret;
 }
 
@@ -70,24 +74,54 @@ void    cmd_free(t_cmd *args) {
     if (args->s) {
         ft_lstclear(&args->s, free_safe);
     }
+    if (args->files) {
+        ft_lstclear(&args->s, free_safe);
+    }
     if (args->s) {
         free_safe(args);
     }
+    free_safe(args);
+}
+
+void    prompt(char *hash, t_cmd *cmd, char *name, int type) 
+{
+    char *formated_name = NULL;
+    size_t  len = ft_strlen(name) + 1;
+    if (type == STRING) {
+        formated_name = ft_calloc(sizeof(char), type == STRING ? len + 2 : len);
+        sprintf(formated_name, "\"%s\"", name);
+    }
+    else {
+        formated_name = ft_strdup(name);
+    }
+    if (cmd->q){
+        if (type == STDIN)
+            printf("%s\n", formated_name);
+        printf("%s\n", hash);
+    }
+    else if (cmd->r) {
+        printf("%s %s\n", hash, formated_name);
+    } else {
+        printf("MD5 (%s) = %s\n", formated_name, hash);
+    }
+    free_safe(formated_name);
 }
 
 void    execute_cmd(t_cmd *cmd) {
-    char *(*hash_fun)(char *);
+    char *(*hash_fun)(char *, size_t);
     if (ft_strequ(cmd->cmd, "md5"))
         hash_fun = &md5;
     else if (ft_strequ(cmd->cmd, "sha256"))
         hash_fun = &sha256;
     t_list *files = cmd->files;
     t_list *strs = cmd->s;
-    // TODO handle -p
+    // TODO handle stdin -p
+    // if (cmd->p || (!strs && !files)) {
+    // }
     while (strs) {
-        char *hash = hash_fun(strs->content);
+        char *hash = hash_fun(strs->content, ft_strlen(strs->content));
+        prompt(hash, cmd, strs->content ,STRING);
+        free(hash);
         strs = strs->next;
-        // printf("Exit here\n");
-        exit(1);
     };
 }
