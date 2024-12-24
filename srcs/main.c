@@ -6,5 +6,6 @@ int main(int ac, char **av) {
     else {
         t_cmd   *cmd = cmd_parse(&av[1]);
         execute_cmd(cmd);
+        cmd_free(cmd);
     }
 }

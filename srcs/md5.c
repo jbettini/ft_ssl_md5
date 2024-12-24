@@ -28,24 +28,25 @@ const uint32_t s[64] = {
 };
 
 char    **md5_get_blocks(char *data_to_hash, uint64_t data_len) {
-    int     blocks_size = (data_len + 8) / 64 + 1;
-    char    **blocks_tab = ft_calloc(sizeof(char *), (blocks_size + 1));
-
-    for (int i = 0; i < blocks_size; i++) {
+    size_t      blocks_size = (data_len + 8) / 64 + 1;
+    char        **blocks_tab = ft_calloc(sizeof(char *), (blocks_size + 1));
+    // printf("Datalen : %lu | blocksize %zu\n", data_len, blocks_size);
+    for (uint64_t i = 0; i < blocks_size; i++) {
         blocks_tab[i] = ft_calloc(sizeof(char), 64 + 1);
-        int offset = i * 64;
-        int rest = data_len - offset;
-        if (rest >= 64)
-            ft_memcpy(blocks_tab[i], &data_to_hash[offset], 64);
+        uint64_t offset = i * 64;
+        uint64_t rest = data_len - offset;
+        if (rest >= 64){
+            ft_memcpy(blocks_tab[i], (data_to_hash + offset), 64);
+        }
         else {
-            ft_memcpy(blocks_tab[i], &data_to_hash[offset], rest);
+            ft_memcpy(blocks_tab[i], (data_to_hash + offset), rest);
             blocks_tab[i][rest] = 0x80;
-            for (int j = (i + 1); j < blocks_size; j++)
+            for (uint64_t j = (i + 1); j < blocks_size; j++)
                 blocks_tab[j] = ft_calloc(sizeof(char), 64 + 1);
             break ;
         }
     }
-
+    
     ((uint64_t*)blocks_tab[blocks_size - 1])[7] = htole64(data_len * 8);
 
     return blocks_tab;

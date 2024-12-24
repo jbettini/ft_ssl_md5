@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "ssl.h": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "typeinfo": "c"
     }
 }

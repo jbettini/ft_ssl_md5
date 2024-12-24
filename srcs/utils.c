@@ -1,23 +1,36 @@
 #include "ssl.h"
 #define PAGE_SIZE 4096
 
-char    *read_data(int fd) {
-    char    *ret = NULL;
-    char    buffer[PAGE_SIZE];
+t_file_data *get_file_struct() {
+    t_file_data *ret = malloc(sizeof(t_file_data));
+    ret->data = NULL;
+    ret->data_size = 0;
+    return ret;
+}
 
+void    free_file(t_file_data *to_free) {
+    free_safe(to_free->data);
+    free_safe(to_free);
+}
+
+t_file_data *read_data(int fd) {
     if (fd < 0) {
         fprintf(stderr, "Error: Invalid file descriptor\n");
         exit(1);
     }
+    char        buffer[PAGE_SIZE + 1];
+    t_file_data *ret = get_file_struct();
     int bytes_read = 0;
     while ((bytes_read = read(fd, buffer, PAGE_SIZE))) {
+        // printf("Bytes Readed : %d | Total : %d\n", bytes_read, ret->data_size);
         if (bytes_read < 0){
             fprintf(stderr, "Error: Read Faillure\n");
-            free(ret);
+            free_file(ret);
             exit(1);
         }
         buffer[bytes_read] = 0;
-        ret = ft_strjoin_gnl(ret, buffer);
+        ret->data = ft_strjoin_gnl(ret->data, buffer);
+        ret->data_size += bytes_read;
     }
     return ret;
 }

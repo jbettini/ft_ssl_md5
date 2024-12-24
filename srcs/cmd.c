@@ -2,7 +2,8 @@
 
 enum type {
     STDIN,
-    STRING
+    STRING,
+    FILES
 };
 
 t_cmd *cmd_get() {
@@ -18,7 +19,7 @@ t_cmd *cmd_get() {
 }
 
 bool    cmd_exit_on_multiple_option(t_cmd *args, char *option) {
-    fprintf(stderr, "%s :Multiple digest or unknown options: %s ans %s\n", args->cmd, option, option);
+    fprintf(stderr, "%s :Multiple digest or unknown options: %s and %s\n", args->cmd, option, option);
     cmd_free(args);
     exit(1);
     return false;
@@ -68,27 +69,17 @@ t_cmd   *cmd_parse(char **args) {
 }
 
 void    cmd_free(t_cmd *args) {
-    if (args->cmd) {
-        free_safe(args->cmd);
-    }
-    if (args->s) {
-        ft_lstclear(&args->s, free_safe);
-    }
-    if (args->files) {
-        ft_lstclear(&args->s, free_safe);
-    }
-    if (args->s) {
-        free_safe(args);
-    }
+    free_safe(args->cmd);
+    ft_lstclear(&args->s, free_safe);
+    ft_lstclear(&args->files, free_safe);
     free_safe(args);
 }
 
 void    prompt(char *hash, t_cmd *cmd, char *name, int type) 
 {
     char *formated_name = NULL;
-    size_t  len = ft_strlen(name) + 1;
     if (type == STRING) {
-        formated_name = ft_calloc(sizeof(char), type == STRING ? len + 2 : len);
+        formated_name = ft_calloc(sizeof(char), ft_strlen(name) + 3);
         sprintf(formated_name, "\"%s\"", name);
     }
     else {
@@ -121,7 +112,21 @@ void    execute_cmd(t_cmd *cmd) {
     while (strs) {
         char *hash = hash_fun(strs->content, ft_strlen(strs->content));
         prompt(hash, cmd, strs->content ,STRING);
-        free(hash);
+        free_safe(hash);
         strs = strs->next;
     };
+    while (files) {
+        int fd = open(files->content, O_RDONLY);
+        if (fd < 0) {
+            fprintf(stderr, "ft_ssl: %s: %s: No such file or directory", cmd->cmd, (char*)files->content);
+            continue ;
+        }
+        t_file_data *file = read_data(fd);
+        char        *hash = hash_fun(file->data, file->data_size);
+        prompt(hash, cmd, files->content, FILES);
+        free_safe(hash);
+        free_file(file);
+        files = files->next;
+    }
+    // exit(0);
 }

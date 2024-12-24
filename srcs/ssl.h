@@ -21,15 +21,26 @@ typedef struct s_cmd
     t_list  *files;
 }				t_cmd;
 
-void    free_safe(void *ptr);
-t_cmd   *cmd_parse(char **args);
-void    help();
-void    cmd_free(t_cmd *args);
-void    ft_putbool(bool b);
-void    cmd_print(t_cmd *args);
-void    execute_cmd(t_cmd *cmd);
-char    *sha256(char *data_to_hash, size_t data_len);
-char    *md5(char *data_to_hash, size_t data_len);
-void    putbytes(uint8_t *octet, int size);
+typedef struct s_file_data
+{
+    char        *data;
+    uint64_t    data_size;
+}				t_file_data;
+
+
+
+void        free_safe(void *ptr);
+void        help();
+void        cmd_free(t_cmd *args);
+void        ft_putbool(bool b);
+void        cmd_print(t_cmd *args);
+void        execute_cmd(t_cmd *cmd);
+void        putbytes(uint8_t *octet, int size);
+void        free_file(t_file_data *to_free);
+void        cmd_free(t_cmd *args);
+char        *sha256(char *data_to_hash, size_t data_len);
+char        *md5(char *data_to_hash, size_t data_len);
+t_cmd       *cmd_parse(char **args);
+t_file_data *read_data(int fd) ;
 
 #endif
