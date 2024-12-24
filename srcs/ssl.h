@@ -2,7 +2,11 @@
 # define SSL_H
 #include "../libft/libft.h"
 #include <stdint.h>
-#include <endian.h>
+// #include <endian.h>
+#include <machine/endian.h>
+// #include <sys/endian.h>
+#define htole64(x) (x)
+#define htobe32(x) htonl(x)
 
 #define AND &
 #define OR |

@@ -118,7 +118,8 @@ void    execute_cmd(t_cmd *cmd) {
     while (files) {
         int fd = open(files->content, O_RDONLY);
         if (fd < 0) {
-            fprintf(stderr, "ft_ssl: %s: %s: No such file or directory", cmd->cmd, (char*)files->content);
+            fprintf(stderr, "ft_ssl: %s: %s: No such file or directory\n", cmd->cmd, (char*)files->content);
+            files = files->next;
             continue ;
         }
         t_file_data *file = read_data(fd);
